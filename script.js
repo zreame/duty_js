@@ -6,13 +6,13 @@ async function getPrayerTimes() {
     const container = document.getElementById('prayer_list');
     // Official JAKIM API for Bukit Jelutong
 
-    // const url = 'https://www.e-solat.gov.my/index.php?r=esolatApi/takwimsolat&period=today&zone=SGR01';
+    const url = 'https://www.e-solat.gov.my/index.php?r=esolatApi/takwimsolat&period=today&zone=SGR01';
 
     try {
-        // const response = await fetch(url);
-        // const result = await response.json();
-        const response = await fetch('/.netlify/functions/get-prayers');
+        const response = await fetch(url);
         const result = await response.json();
+        // const response = await fetch('/.netlify/functions/get-prayers');
+        // const result = await response.json();
         
         // JAKIM returns an array called 'prayerTime'
         const todayData = result.prayerTime[0];
@@ -36,7 +36,6 @@ async function getPrayerTimes() {
 
     } catch (err) {
         console.error("JAKIM API blocked or down:", err);
-        // Fallback to the AlAdhan logic we built earlier if this fails
     }
 }
 
