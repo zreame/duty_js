@@ -18,7 +18,10 @@ exports.handler = async function(event, context) {
   } catch (error) {
     return {
       statusCode: 500,
-      body: JSON.stringify({ error: 'Failed fetching JAKIM data' })
-    };
-  }
-};
+        body: JSON.stringify({ 
+            error: "Failed fetching JAKIM data", 
+            message: error.message,
+            stack: error.stack
+    })
+  };
+}}
