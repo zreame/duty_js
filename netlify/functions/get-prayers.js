@@ -1,4 +1,4 @@
-const fetch = require('node-fetch'); // Netlify includes this by default
+// const fetch = require('node-fetch'); // Netlify includes this by default
 
 exports.handler = async function(event, context) {
   const JAKIM_API = "https://www.e-solat.gov.my/index.php?r=esolatApi/takwimsolat&period=today&zone=SGR01";
