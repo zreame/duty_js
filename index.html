@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Duty Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h2 id="full_date_time">Loading...</h2>
+        </div>
+        <div class="section prayer-section">
+            <div class="duty-label">prayer_times (shah_alam):</div>
+            <div id="prayer_list" class="prayer-container">
+                <span class="loading">Fetching times...</span>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="duty-label">neko_duty: <span id="neko_status" class="status-val">...</span></div>
+            <img src="https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?q=80&w=500&auto=format&fit=crop" alt="Cat">
+            <p class="duty-label demphasized"><i>~ today is day <span id="day_of_year"></span> of the year</i></p>
+        </div>
+
+        <div class="section">
+            <div class="duty-label">wipey_duty: <span id="wipey_status" class="status-val">...</span></div>
+            <!-- Ensure this image is in your root folder or update the path -->
+            <img src="barista-cleaning-table-while-wearing-medical-mask.jpg" alt="Wiping table">
+            <p class="duty-label demphasized"><i>~ it is week <span id="week_number"></span> of the year</i></p>
+        </div>
+        <div class="section">
+            <div class="duty-label">quote_of_the_day:</div>
+            <!-- Replace this URL with any inspiring photo you like -->
+            <img id="daily_image" alt="Daily Vibe">
+            <p id="daily_quote" class="quote-text">
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

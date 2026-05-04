@@ -1,0 +1,107 @@
+/* Base Styles */
+body { 
+    font-family:'Courier New', monospace; 
+    padding: 20px; /* Reduced padding for mobile */
+    background-color: #f4f7f6; 
+    color: #333; 
+    line-height: 1.6;
+}
+
+.container { 
+    max-width: 500px; 
+    margin: auto; 
+}
+
+.header h2 { 
+    font-size: 1.2rem; /* Scalable font size */
+    word-wrap: break-word; 
+    margin-bottom: 20px;
+    border-bottom: 2px solid #ddd;
+    padding-bottom: 10px;
+}
+
+.section { 
+    background: white; 
+    padding: 20px; 
+    border-radius: 16px; 
+    margin-bottom: 20px; 
+    box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); 
+}
+
+.duty-label { 
+    font-weight: bold; 
+    font-family: 'Courier New', monospace; 
+    font-size: 1.1rem; 
+    color: #2c3e50; 
+}
+
+.demphasized{
+    color: #4086d7fb;  
+}
+
+.status-val { 
+    color: #e67e22; 
+    text-transform: uppercase;
+}
+
+img { 
+    width: 100%; 
+    height: 180px; 
+    object-fit: cover; 
+    border-radius: 10px; 
+    margin-top: 15px; 
+}
+
+.prayer-section {
+    background-color: #F2E8D5; /* Ketupat */
+    padding: 15px;             /* Adds breathing room inside the colored box */
+    border-radius: 8px;        /* Softens the edges */
+    margin-bottom: 20px;       /* Keeps it separated from the next section */
+}
+
+.prayer-section .duty-label {
+    /* color: #4e402e; Muted wood-brown */
+    font-weight: 600;
+    letter-spacing: 0.02em;
+}
+
+#prayer_list {
+    margin-top: 15px;
+    border-top: 1px solid #f0f0f0;
+    padding-top: 10px;
+}
+
+.prayer-row {
+    display: flex;
+    justify-content: flex-start; /* Aligns both to the left */
+    gap: 15px;                  /* Precisely controls the distance between them */
+    padding: 4px 0;
+    color: #5D5344;
+}
+
+.prayer-row span {
+    width: 100px;                /* Optional: Fixed width for labels so times align vertically */
+    display: inline-block;
+}
+
+
+#daily_image {
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out;
+    background-color: #f0f0f0; /* Optional: subtle grey box while loading */
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 480px) {
+    body {
+        padding: 15px;
+    }
+    
+    .section {
+        padding: 15px;
+    }
+
+    .header h2 {
+        font-size: 1rem;
+    }
+}
