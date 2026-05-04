@@ -12,31 +12,27 @@ async function getPrayerTimes() {
         // const response = await fetch(url);
         // const result = await response.json();
         const response = await fetch('/.netlify/functions/get-prayers');
-        const data = await response.json();
-        console.log("Function Response:", data);
-
-        // const response = await fetch('/.netlify/functions/get-prayers');
-        // const result = await response.json();
+        const result = await response.json();
         
-        // // JAKIM returns an array called 'prayerTime'
-        // const todayData = result.prayerTime[0];
+        // JAKIM returns an array called 'prayerTime'
+        const todayData = result.prayerTime[0];
 
-        // const formatTime = (timeStr) => timeStr.substring(0, 5);
+        const formatTime = (timeStr) => timeStr.substring(0, 5);
 
-        // const prayers = [
-        //     { label: 'Subuh', time: formatTime(todayData.fajr) },
-        //     { label: 'Zohor', time: formatTime(todayData.dhuhr) },
-        //     { label: 'Asar', time: formatTime(todayData.asr) },
-        //     { label: 'Maghrib', time: formatTime(todayData.maghrib) },
-        //     { label: 'Isyak', time: formatTime(todayData.isha) }
-        // ];
+        const prayers = [
+            { label: 'Subuh', time: formatTime(todayData.fajr) },
+            { label: 'Zohor', time: formatTime(todayData.dhuhr) },
+            { label: 'Asar', time: formatTime(todayData.asr) },
+            { label: 'Maghrib', time: formatTime(todayData.maghrib) },
+            { label: 'Isyak', time: formatTime(todayData.isha) }
+        ];
 
-        // container.innerHTML = prayers.map(p => `
-        //     <div class="prayer-row">
-        //         <span>${p.label}</span>
-        //         <span>${p.time}</span>
-        //     </div>
-        // `).join('');
+        container.innerHTML = prayers.map(p => `
+            <div class="prayer-row">
+                <span>${p.label}</span>
+                <span>${p.time}</span>
+            </div>
+        `).join('');
 
     } catch (err) {
         console.error("JAKIM API blocked or down:", err);
