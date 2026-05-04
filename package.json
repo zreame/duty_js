@@ -1,0 +1,24 @@
+{
+  "name": "duty_js",
+  "version": "1.0.0",
+  "description": "",
+  "main": "script.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://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@github.com/zreame/duty_js.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/zreame/duty_js/issues"
+  },
+  "homepage": "https://github.com/zreame/duty_js#readme",
+  "dependencies": {
+    "node-fetch": "^2.7.0"
+  }
+}

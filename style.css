@@ -36,7 +36,9 @@ body {
 }
 
 .demphasized{
-    color: #4086d7fb;  
+    color: #20b8ff;  
+    font-size: 1rem; 
+    font-weight: bold; 
 }
 
 .status-val { 
@@ -53,7 +55,7 @@ img {
 }
 
 .prayer-section {
-    background-color: #F2E8D5; /* Ketupat */
+    background-color: #cbd1afc5; /* Ketupat */
     padding: 15px;             /* Adds breathing room inside the colored box */
     border-radius: 8px;        /* Softens the edges */
     margin-bottom: 20px;       /* Keeps it separated from the next section */
@@ -89,6 +91,10 @@ img {
     opacity: 0;
     transition: opacity 0.5s ease-in-out;
     background-color: #f0f0f0; /* Optional: subtle grey box while loading */
+}
+
+.qotd{
+    background-color: #F2E8D5;
 }
 
 /* Mobile Responsiveness */

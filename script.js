@@ -5,10 +5,14 @@ function randInteger(min, max) {
 async function getPrayerTimes() {
     const container = document.getElementById('prayer_list');
     // Official JAKIM API for Bukit Jelutong
-    const url = 'https://www.e-solat.gov.my/index.php?r=esolatApi/takwimsolat&period=today&zone=SGR01';
+
+    // const url = 'https://www.e-solat.gov.my/index.php?r=esolatApi/takwimsolat&period=today&zone=SGR01';
 
     try {
-        const response = await fetch(url);
+        // const response = await fetch(url);
+        // const result = await response.json();
+
+        const response = await fetch('/.netlify/functions/get-prayers');
         const result = await response.json();
         
         // JAKIM returns an array called 'prayerTime'
