@@ -21,6 +21,7 @@ async function getPrayerTimes() {
 
         const prayers = [
             { label: 'Subuh', time: formatTime(todayData.fajr) },
+            { label: 'Syuruk', time: formatTime(todayData.syuruk) },   
             { label: 'Zohor', time: formatTime(todayData.dhuhr) },
             { label: 'Asar', time: formatTime(todayData.asr) },
             { label: 'Maghrib', time: formatTime(todayData.maghrib) },
