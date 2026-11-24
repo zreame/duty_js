@@ -78,11 +78,13 @@ async function getPrayerTimes() {
 // Triggered on #updatelocation button click
 async function updateLocationPrayerTimes() {
   const btn = document.getElementById("updatelocation");
+  const locationPromise = fetchPrayerDataByLocation();
+
   btn.disabled = true;
   btn.textContent = "locating...";
 
   try {
-    const { locationName, times } = await fetchPrayerDataByLocation();
+    const { locationName, times } = await locationPromise;
 
     updatePrayerLabel(locationName);
     renderPrayerTimes(times);
@@ -90,7 +92,7 @@ async function updateLocationPrayerTimes() {
     btn.classList.add("is-updated");
   } catch (err) {
     console.error("Geo update failed:", err);
-    alert("Fetching geo failed, reverting to home base prayer time.");
+    alert(`Geo failed: ${err.message}\nReverting to Shah Alam.`);
     btn.textContent = "update_location";
     btn.classList.remove("is-updated");
     await getPrayerTimes();
