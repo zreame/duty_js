@@ -38,7 +38,7 @@ body {
 .demphasized {
     color: #20b8ff;  
     font-size: 1rem; 
-    font-weight: bold; 
+    font-weight: normal; 
 }
 
 .status-val { 
