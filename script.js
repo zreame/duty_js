@@ -1,138 +1,178 @@
+import { fetchPrayerDataByLocation } from "./prayer-times.js";
+
 function randInteger(min, max) {
-    return Math.floor(Math.random() * (max - min + 1)) + min;
+  return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
+function getDayOfMonthGMT8(date = new Date()) {
+  const dayString = new Intl.DateTimeFormat("en-US", {
+    timeZone: "Asia/Kuala_Lumpur",
+    day: "numeric",
+  }).format(date);
+
+  return Number(dayString);
+}
+
+function updatePrayerLabel(locationName) {
+  const locationEl = document.getElementById("prayer_location");
+  if (locationEl) {
+    locationEl.textContent = `(${locationName})`;
+  }
+}
+
+function renderPrayerTimes(times) {
+  const container = document.getElementById("prayer_list");
+  const prayers = [
+    { label: "Subuh", time: times.fajr },
+    { label: "Syuruk", time: times.syuruk },
+    { label: "Zohor", time: times.zuhr },
+    { label: "Asar", time: times.asar },
+    { label: "Maghrib", time: times.maghrib },
+    { label: "Isyak", time: times.isyak },
+  ];
+
+  container.innerHTML = prayers
+    .map(
+      (p) => `
+        <div class="prayer-row">
+            <span>${p.label}</span>
+            <span>${p.time}</span>
+        </div>
+      `
+    )
+    .join("");
+}
+
+// Default home base (Shah Alam - SGR01)
 async function getPrayerTimes() {
-    const container = document.getElementById('prayer_list');
-    // Official JAKIM API for Bukit Jelutong
+  updatePrayerLabel("shah_alam, malaysia");
+  const day = getDayOfMonthGMT8();
+  const url = `https://api.waktusolat.app/solat/SGR01/${day}`;
 
-    const url = 'https://www.e-solat.gov.my/index.php?r=esolatApi/takwimsolat&period=today&zone=SGR01';
+  try {
+    const response = await fetch(url);
+    if (!response.ok) throw new Error(`HTTP error: ${response.status}`);
+    const result = await response.json();
 
-    try {
-        const response = await fetch(url);
-        const result = await response.json();
-        // const response = await fetch('/.netlify/functions/get-prayers');
-        // const result = await response.json();
-        
-        // JAKIM returns an array called 'prayerTime'
-        const todayData = result.prayerTime[0];
+    const todayData = Array.isArray(result.prayerTime)
+      ? result.prayerTime[0]
+      : result.prayerTime;
 
-        const formatTime = (timeStr) => timeStr.substring(0, 5);
+    const formatTime = (timeStr) => timeStr.substring(0, 5);
 
-        const prayers = [
-            { label: 'Subuh', time: formatTime(todayData.fajr) },
-            { label: 'Syuruk', time: formatTime(todayData.syuruk) },   
-            { label: 'Zohor', time: formatTime(todayData.dhuhr) },
-            { label: 'Asar', time: formatTime(todayData.asr) },
-            { label: 'Maghrib', time: formatTime(todayData.maghrib) },
-            { label: 'Isyak', time: formatTime(todayData.isha) }
-        ];
+    renderPrayerTimes({
+      fajr: formatTime(todayData.fajr),
+      syuruk: formatTime(todayData.syuruk),
+      zuhr: formatTime(todayData.dhuhr),
+      asar: formatTime(todayData.asr),
+      maghrib: formatTime(todayData.maghrib),
+      isyak: formatTime(todayData.isha),
+    });
+  } catch (err) {
+    console.error("Home base API error:", err);
+    document.getElementById("prayer_list").innerHTML =
+      `<span class="loading">Unable to load prayer times.</span>`;
+  }
+}
 
-        container.innerHTML = prayers.map(p => `
-            <div class="prayer-row">
-                <span>${p.label}</span>
-                <span>${p.time}</span>
-            </div>
-        `).join('');
+// Triggered on #updatelocation button click
+async function updateLocationPrayerTimes() {
+  const btn = document.getElementById("updatelocation");
+  btn.disabled = true;
+  btn.textContent = "locating...";
 
-    } catch (err) {
-        console.error("JAKIM API blocked or down:", err);
-    }
+  try {
+    const { locationName, times } = await fetchPrayerDataByLocation();
+
+    updatePrayerLabel(locationName);
+    renderPrayerTimes(times);
+    btn.textContent = "current_location";
+    btn.classList.add("is-updated");
+  } catch (err) {
+    console.error("Geo update failed:", err);
+    alert("Fetching geo failed, reverting to home base prayer time.");
+    btn.textContent = "update_location";
+    btn.classList.remove("is-updated");
+    await getPrayerTimes();
+  } finally {
+    btn.disabled = false;
+  }
 }
 
 async function updateVibe() {
-    const imgEl = document.getElementById('daily_image');
-    const quoteEl = document.getElementById('daily_quote');
+  const imgEl = document.getElementById("daily_image");
+  const quoteEl = document.getElementById("daily_quote");
 
-    try {
-        // 1. Fetch quote
-        const response = await fetch('https://api.adviceslip.com/advice');
-        const data = await response.json();
-        
-        // 2. Setup the image
-        const seed = randInteger(100, 1000);
-        const imgUrl = `https://picsum.photos/seed/${seed}/500/300`;
+  try {
+    const response = await fetch("https://api.adviceslip.com/advice");
+    const data = await response.json();
 
-        // 3. Pre-load the image bytes
-        const tempImg = new Image();
-        tempImg.src = imgUrl;
+    const seed = randInteger(100, 1000);
+    const imgUrl = `https://picsum.photos/seed/${seed}/500/300`;
 
-        // This promise ensures the "broken" icon never appears
-        await new Promise((resolve) => {
-            tempImg.onload = resolve;
-            tempImg.onerror = resolve; 
-        });
+    const tempImg = new Image();
+    tempImg.src = imgUrl;
 
-        // 4. Everything is in the browser cache now. Swap and Reveal.
-        imgEl.src = imgUrl;
-        quoteEl.textContent = `"${data.slip.advice}"`;
-        imgEl.style.opacity = 1; // Fades in smoothly
+    await new Promise((resolve) => {
+      tempImg.onload = resolve;
+      tempImg.onerror = resolve;
+    });
 
-    } catch (err) {
-        // Step 3: Know when to let go (Fallback)
-        imgEl.src = "https://picsum.photos/500/300?grayscale&blur=2";
-        imgEl.style.opacity = 1;
-    }
+    imgEl.src = imgUrl;
+    quoteEl.textContent = `"${data.slip.advice}"`;
+    imgEl.style.opacity = 1;
+  } catch (err) {
+    imgEl.src = "https://picsum.photos/500/300?grayscale&blur=2";
+    imgEl.style.opacity = 1;
+  }
 }
-
-
 
 function updateDashboard() {
-    const now = new Date();
+  const now = new Date();
 
-// 1. Calculate Day of Year
-    const start = new Date(now.getFullYear(), 0, 0);
-    const diff = now - start;
-    const oneDay = 1000 * 60 * 60 * 24;
-    const dayNum = Math.floor(diff / oneDay);
+  // 1. Day of Year
+  const start = new Date(now.getFullYear(), 0, 0);
+  const dayNum = Math.floor((now - start) / (1000 * 60 * 60 * 24));
 
-    // 2. Calculate ISO Week Number
-    const target = new Date(now.valueOf());
-    const dayNr = (now.getDay() + 6) % 7;
-    target.setDate(target.getDate() - dayNr + 3);
-    const firstThursday = target.valueOf();
-    target.setMonth(0, 1);
-    if (target.getDay() !== 4) {
-        target.setMonth(0, 1 + ((4 - target.getDay() + 7) % 7));
-    }
-    const weekNum = 1 + Math.ceil((firstThursday - target) / 604800000);
+  // 2. ISO Week Number
+  const target = new Date(now.valueOf());
+  const dayNr = (now.getDay() + 6) % 7;
+  target.setDate(target.getDate() - dayNr + 3);
+  const firstThursday = target.valueOf();
+  target.setMonth(0, 1);
+  if (target.getDay() !== 4) {
+    target.setMonth(0, 1 + ((4 - target.getDay() + 7) % 7));
+  }
+  const weekNum = 1 + Math.ceil((firstThursday - target) / 604800000);
 
-    // 3. Logic for Duties
-    const nekoStatus = (dayNum % 2 !== 0) ? "Ayy" : "Ism";
-    const wipeyStatus = (weekNum % 2 === 0) ? "Ayy" : "Ism";
+  // 3. Duties
+  const nekoStatus = dayNum % 2 !== 0 ? "Ayy" : "Ism";
+  const wipeyStatus = weekNum % 2 === 0 ? "Ayy" : "Ism";
 
-    // 4. Format Date String (Manual build for May 04, 2026 | 5:42pm style)
-    const months = ["January", "February", "March", "April", "May", "June", 
-                    "July", "August", "September", "October", "November", "December"];
-    
-    const monthName = months[now.getMonth()];
-    const dayPadded = String(now.getDate()).padStart(2, '0');
-    const yearNum = now.getFullYear();
-    
-    // let hours = now.getHours();
-    // const minsPadded = String(now.getMinutes()).padStart(2, '0');
-    // const ampm = hours >= 12 ? 'pm' : 'am';
-    
-    // hours = hours % 12;
-    // hours = hours ? hours : 12; // Handle midnight (0) as 12
+  // 4. Date & 24h Time
+  const months = [
+    "January", "February", "March", "April", "May", "June",
+    "July", "August", "September", "October", "November", "December",
+  ];
+  const monthName = months[now.getMonth()];
+  const dayPadded = String(now.getDate()).padStart(2, "0");
+  const hours = String(now.getHours()).padStart(2, "0");
+  const minsPadded = String(now.getMinutes()).padStart(2, "0");
 
-    const hours = String(now.getHours()).padStart(2, '0');
-    const minsPadded = String(now.getMinutes()).padStart(2, '0');
-    
-    // Final string: "19:38"
-    const time24 = `${hours}:${minsPadded}`;
-    
-    const dateString = `${monthName} ${dayPadded}, ${yearNum} | ${time24}`;
-
-    // 5. Inject into HTML
-    document.getElementById('full_date_time').textContent = dateString;
-    document.getElementById('day_of_year').textContent = dayNum;
-    document.getElementById('week_number').textContent = weekNum;
-    document.getElementById('neko_status').textContent = nekoStatus;
-    document.getElementById('wipey_status').textContent = wipeyStatus;
+  document.getElementById("full_date_time").textContent =
+    `${monthName} ${dayPadded}, ${now.getFullYear()} | ${hours}:${minsPadded}`;
+  document.getElementById("day_of_year").textContent = dayNum;
+  document.getElementById("week_number").textContent = weekNum;
+  document.getElementById("neko_status").textContent = nekoStatus;
+  document.getElementById("wipey_status").textContent = wipeyStatus;
 }
 
-// Run immediately on load
-window.addEventListener('DOMContentLoaded', updateVibe);
+// Initial load
+updateVibe();
 getPrayerTimes();
 updateDashboard();
+
+// Bind button click
+document
+  .getElementById("updatelocation")
+  ?.addEventListener("click", updateLocationPrayerTimes);

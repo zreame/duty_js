@@ -1,7 +1,7 @@
 /* Base Styles */
 body { 
-    font-family:'Courier New', monospace; 
-    padding: 20px; /* Reduced padding for mobile */
+    font-family: 'Courier New', monospace; 
+    padding: 20px;
     background-color: #f4f7f6; 
     color: #333; 
     line-height: 1.6;
@@ -13,7 +13,7 @@ body {
 }
 
 .header h2 { 
-    font-size: 1.2rem; /* Scalable font size */
+    font-size: 1.2rem;
     word-wrap: break-word; 
     margin-bottom: 20px;
     border-bottom: 2px solid #ddd;
@@ -35,7 +35,7 @@ body {
     color: #2c3e50; 
 }
 
-.demphasized{
+.demphasized {
     color: #20b8ff;  
     font-size: 1rem; 
     font-weight: bold; 
@@ -56,15 +56,67 @@ img {
 
 .prayer-section {
     background-color: #cbd1afc5; /* Ketupat */
-    padding: 15px;             /* Adds breathing room inside the colored box */
-    border-radius: 8px;        /* Softens the edges */
-    margin-bottom: 20px;       /* Keeps it separated from the next section */
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+.prayer-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: nowrap;
+    gap: 8px;
 }
 
 .prayer-section .duty-label {
-    /* color: #4e402e; Muted wood-brown */
     font-weight: 600;
     letter-spacing: 0.02em;
+    white-space: nowrap;
+    margin: 0;
+}
+
+.prayer-location {
+    font-family: 'Courier New', monospace;
+    font-size: 1.1rem;
+    font-weight: bold;
+    color: #2c3e50;
+    margin-top: 2px;
+    word-break: break-word;
+}
+
+#updatelocation {
+    flex-shrink: 0;
+    white-space: nowrap;
+    font-family: 'Courier New', monospace;
+    font-size: 0.8rem;
+    font-weight: bold;
+    color: #2c3e50;
+    background-color: #E2725B;
+    border: 1px solid rgba(93, 83, 68, 0.35);
+    border-radius: 6px;
+    padding: 4px 10px;
+    cursor: pointer;
+    box-shadow: 0 2px 5px rgba(44, 62, 80, 0.15);
+    transition: background-color 0.15s ease, box-shadow 0.15s ease, transform 0.1s ease;
+}
+
+#updatelocation.is-updated {
+    background-color: #FF10F0;
+}
+
+#updatelocation:hover:not(:disabled) {
+    box-shadow: 0 3px 7px rgba(44, 62, 80, 0.22);
+}
+
+#updatelocation:active:not(:disabled) {
+    transform: translateY(1px);
+    box-shadow: 0 1px 2px rgba(44, 62, 80, 0.15);
+}
+
+#updatelocation:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
 }
 
 #prayer_list {
@@ -75,25 +127,24 @@ img {
 
 .prayer-row {
     display: flex;
-    justify-content: flex-start; /* Aligns both to the left */
-    gap: 15px;                  /* Precisely controls the distance between them */
+    justify-content: flex-start;
+    gap: 15px;
     padding: 4px 0;
     color: #5D5344;
 }
 
 .prayer-row span {
-    width: 100px;                /* Optional: Fixed width for labels so times align vertically */
+    width: 100px;
     display: inline-block;
 }
-
 
 #daily_image {
     opacity: 0;
     transition: opacity 0.5s ease-in-out;
-    background-color: #f0f0f0; /* Optional: subtle grey box while loading */
+    background-color: #f0f0f0;
 }
 
-.qotd{
+.qotd {
     background-color: #F2E8D5;
 }
 
@@ -109,5 +160,10 @@ img {
 
     .header h2 {
         font-size: 1rem;
+    }
+
+    #updatelocation {
+        font-size: 0.72rem;
+        padding: 3px 7px;
     }
 }

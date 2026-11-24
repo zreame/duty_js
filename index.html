@@ -12,7 +12,11 @@
             <h2 id="full_date_time">Loading...</h2>
         </div>
         <div class="section prayer-section">
-            <div class="duty-label">prayer_times(shah_alam):</div>
+            <div class="prayer-header">
+                <div class="duty-label">prayer_times:</div>
+                <button id="updatelocation">update_location</button>
+            </div>
+            <div id="prayer_location" class="prayer-location">(shah_alam, malaysia)</div>
             <div id="prayer_list" class="prayer-container">
                 <span class="loading">Fetching times...</span>
             </div>
@@ -21,7 +25,7 @@
             <div class="duty-label">quote_of_the_day:</div>
             <!-- Replace this URL with any inspiring photo you like -->
             <img id="daily_image" alt="Daily Vibe">
-            <p id="daily_quote" class="quote-text">
+            <p id="daily_quote" class="quote-text"></p>
         </div>
 
         <div class="section">
@@ -39,6 +43,6 @@
 
     </div>
 
-    <script src="script.js"></script>
+    <script type="module" src="script.js"></script>
 </body>
 </html>
