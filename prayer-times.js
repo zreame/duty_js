@@ -1,14 +1,21 @@
 function getDeviceCoordinates() {
   return new Promise((resolve, reject) => {
     if (!("geolocation" in navigator)) {
-      reject(new Error("Geolocation is not supported."));
+      reject(new Error("Geolocation not supported by browser."));
       return;
     }
 
     navigator.geolocation.getCurrentPosition(
       (pos) => resolve({ lat: pos.coords.latitude, long: pos.coords.longitude }),
-      (err) => reject(err),
-      { enableHighAccuracy: false, timeout: 8000, maximumAge: 0 }
+      (err) => {
+        const reasons = {
+          1: "Permission denied (check iOS Settings > Safari Websites & site Location setting).",
+          2: "Position unavailable (CoreLocation could not get a fix).",
+          3: "Location request timed out.",
+        };
+        reject(new Error(reasons[err.code] || err.message || "Unknown GPS error"));
+      },
+      { enableHighAccuracy: false, timeout: 15000, maximumAge: 0 }
     );
   });
 }
