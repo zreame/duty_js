@@ -88,12 +88,12 @@ async function updateLocationPrayerTimes() {
 
     updatePrayerLabel(locationName);
     renderPrayerTimes(times);
-    btn.textContent = "current_location";
+    btn.textContent = "current location";
     btn.classList.add("is-updated");
   } catch (err) {
     console.error("Geo update failed:", err);
     alert(`Geo failed: ${err.message}\nReverting to Shah Alam.`);
-    btn.textContent = "update_location";
+    btn.textContent = "update location";
     btn.classList.remove("is-updated");
     await getPrayerTimes();
   } finally {
