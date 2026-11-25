@@ -32,7 +32,7 @@ function updatePrayerLabel(location, angle, isGlobal = false, method = "") {
 
   if (noteEl) {
     if (isGlobal) {
-      noteEl.textContent = `~ computed with Aladhan (Shafi'i | ${method})`;
+      noteEl.textContent = `~ computed with Aladhan (Shafi'i| ${method})`;
       noteEl.hidden = false;
     } else {
       noteEl.textContent = "";
@@ -183,7 +183,7 @@ function updateDashboard() {
   const minsPadded = String(now.getMinutes()).padStart(2, "0");
 
   document.getElementById("full_date_time").textContent =
-    `${monthName} ${dayPadded}, ${now.getFullYear()} | ${hours}:${minsPadded}`;
+    `${monthName} ${dayPadded}, ${now.getFullYear()}| ${hours}:${minsPadded}`;
   document.getElementById("day_of_year").textContent = dayNum;
   document.getElementById("week_number").textContent = weekNum;
   document.getElementById("neko_status").textContent = nekoStatus;
