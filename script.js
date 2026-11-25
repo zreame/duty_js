@@ -28,7 +28,7 @@ function updatePrayerLabel(location, angle, isGlobal = false, method = "") {
     return;
   }
 
-  labelEl.innerHTML = `<strong>${toTitleCase(location)} | Kiblat: ${angle}</strong>`;
+  labelEl.innerHTML = `<strong>${toTitleCase(location)} | Qiblah: ${angle}</strong>`;
 
   if (noteEl) {
     if (isGlobal) {
