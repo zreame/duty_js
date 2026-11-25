@@ -20,13 +20,25 @@ function getDayOfMonthGMT8(date = new Date()) {
   return Number(dayString);
 }
 
-function updatePrayerLabel(location, angle) {
+function updatePrayerLabel(location, angle, isGlobal = false, method = "") {
   const labelEl = document.getElementById("prayer_location");
+  const noteEl = document.getElementById("kiblat_note");
   if (!labelEl) {
     console.error("Location element not found in DOM");
     return;
   }
+
   labelEl.innerHTML = `<strong>${toTitleCase(location)} | Kiblat: ${angle}</strong>`;
+
+  if (noteEl) {
+    if (isGlobal) {
+      noteEl.textContent = `~ computed with Aladhan (Shafi'i | ${method})`;
+      noteEl.hidden = false;
+    } else {
+      noteEl.textContent = "";
+      noteEl.hidden = true;
+    }
+  }
 }
 
 function renderPrayerTimes(times) {
@@ -93,9 +105,9 @@ async function updateLocationPrayerTimes() {
   btn.textContent = "locating...";
 
   try {
-    const { locationName, qibla, times } = await locationPromise;
+    const { locationName, qibla, isGlobal, method, times } = await locationPromise;
 
-    updatePrayerLabel(locationName, qibla);
+    updatePrayerLabel(locationName, qibla, isGlobal, method);
     renderPrayerTimes(times);
     btn.textContent = "current location";
     btn.classList.add("is-updated");

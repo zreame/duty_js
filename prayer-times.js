@@ -148,12 +148,12 @@ export async function fetchPrayerDataByLocation() {
 
     if (info.countryCode === "MY") {
       const data = await fetchJson(`https://api.waktusolat.app/v2/solat/gps/${lat}/${long}`);
-      return { locationName, qibla, times: parseMalaysiaPrayerTimes(data) };
+      return { locationName, qibla, isGlobal: false, times: parseMalaysiaPrayerTimes(data) };
     }
 
     if (info.countryCode === "SG") {
       const data = await fetchJson("https://api.prayertimes.sg/api/v1/prayer-times/today");
-      return { locationName, qibla, times: parseSingaporePrayerTimes(data) };
+      return { locationName, qibla, isGlobal: false, times: parseSingaporePrayerTimes(data) };
     }
   } catch (err) {
     console.warn("Regional endpoint failed; falling back to AlAdhan:", err);
@@ -162,7 +162,13 @@ export async function fetchPrayerDataByLocation() {
   const globalData = await fetchJson(
     `https://api.aladhan.com/v1/timings?latitude=${lat}&longitude=${long}&school=0`
   );
-  return { locationName, qibla, times: parseGlobalPrayerTimes(globalData) };
+  const method = globalData.data?.meta?.method?.name || "Auto";
+
+  return {
+    locationName,
+    qibla,
+    isGlobal: true,
+    method,
+    times: parseGlobalPrayerTimes(globalData),
+  };
 }
-
-
