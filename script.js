@@ -1,5 +1,12 @@
 import { fetchPrayerDataByLocation } from "./prayer-times.js";
 
+function toTitleCase(str) {
+  return str
+    .replace(/_/g, " ")
+    .toLowerCase()
+    .replace(/\b\w/g, (char) => char.toUpperCase());
+}
+
 function randInteger(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
@@ -13,11 +20,13 @@ function getDayOfMonthGMT8(date = new Date()) {
   return Number(dayString);
 }
 
-function updatePrayerLabel(locationName) {
-  const locationEl = document.getElementById("prayer_location");
-  if (locationEl) {
-    locationEl.textContent = `(${locationName})`;
+function updatePrayerLabel(location, angle) {
+  const labelEl = document.getElementById("prayer_location");
+  if (!labelEl) {
+    console.error("Location element not found in DOM");
+    return;
   }
+  labelEl.innerHTML = `<strong>${toTitleCase(location)} | Kiblat: ${angle}</strong>`;
 }
 
 function renderPrayerTimes(times) {
@@ -45,7 +54,7 @@ function renderPrayerTimes(times) {
 
 // Default home base (Shah Alam - SGR01)
 async function getPrayerTimes() {
-  updatePrayerLabel("shah_alam, malaysia");
+  updatePrayerLabel("Shah Alam, Malaysia", "292.6°");
   const day = getDayOfMonthGMT8();
   const url = `https://api.waktusolat.app/solat/SGR01/${day}`;
 
@@ -84,9 +93,9 @@ async function updateLocationPrayerTimes() {
   btn.textContent = "locating...";
 
   try {
-    const { locationName, times } = await locationPromise;
+    const { locationName, qibla, times } = await locationPromise;
 
-    updatePrayerLabel(locationName);
+    updatePrayerLabel(locationName, qibla);
     renderPrayerTimes(times);
     btn.textContent = "current location";
     btn.classList.add("is-updated");

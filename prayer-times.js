@@ -15,7 +15,7 @@ function getDeviceCoordinates() {
         };
         reject(new Error(reasons[err.code] || err.message || "Unknown GPS error"));
       },
-      { enableHighAccuracy: false, timeout: 15000, maximumAge: 0 }
+      { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 }
     );
   });
 }
@@ -118,8 +118,28 @@ function parseGlobalPrayerTimes(data) {
   };
 }
 
+function getQiblaBearing(lat, long) {
+  const KAABA_LAT = 21.4225;
+  const KAABA_LONG = 39.8262;
+  const toRad = (deg) => (deg * Math.PI) / 180;
+  const toDeg = (rad) => (rad * 180) / Math.PI;
+
+  const phi1 = toRad(lat);
+  const phi2 = toRad(KAABA_LAT);
+  const dLambda = toRad(KAABA_LONG - long);
+
+  const y = Math.sin(dLambda) * Math.cos(phi2);
+  const x =
+    Math.cos(phi1) * Math.sin(phi2) -
+    Math.sin(phi1) * Math.cos(phi2) * Math.cos(dLambda);
+
+  const bearing = (toDeg(Math.atan2(y, x)) + 360) % 360;
+  return `${Math.round(bearing * 10) / 10}°`;
+}
+
 export async function fetchPrayerDataByLocation() {
   const { lat, long } = await getDeviceCoordinates();
+  const qibla = getQiblaBearing(lat, long);
   let locationName = "current_location";
 
   try {
@@ -128,12 +148,12 @@ export async function fetchPrayerDataByLocation() {
 
     if (info.countryCode === "MY") {
       const data = await fetchJson(`https://api.waktusolat.app/v2/solat/gps/${lat}/${long}`);
-      return { locationName, times: parseMalaysiaPrayerTimes(data) };
+      return { locationName, qibla, times: parseMalaysiaPrayerTimes(data) };
     }
 
     if (info.countryCode === "SG") {
       const data = await fetchJson("https://api.prayertimes.sg/api/v1/prayer-times/today");
-      return { locationName, times: parseSingaporePrayerTimes(data) };
+      return { locationName, qibla, times: parseSingaporePrayerTimes(data) };
     }
   } catch (err) {
     console.warn("Regional endpoint failed; falling back to AlAdhan:", err);
@@ -142,5 +162,7 @@ export async function fetchPrayerDataByLocation() {
   const globalData = await fetchJson(
     `https://api.aladhan.com/v1/timings?latitude=${lat}&longitude=${long}&school=0`
   );
-  return { locationName, times: parseGlobalPrayerTimes(globalData) };
+  return { locationName, qibla, times: parseGlobalPrayerTimes(globalData) };
 }
+
+
