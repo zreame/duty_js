@@ -28,11 +28,11 @@ function updatePrayerLabel(location, angle, isGlobal = false, method = "") {
     return;
   }
 
-  labelEl.innerHTML = `<strong>${toTitleCase(location)}| Qiblah: ${angle}</strong>`;
+  labelEl.innerHTML = `<strong>${toTitleCase(location)}| Kiblat: ${angle}</strong>`;
 
   if (noteEl) {
     if (isGlobal) {
-      noteEl.textContent = `~ computed with Aladhan (Shafi'i| ${method})`;
+      noteEl.textContent = `~ computed with AlAdhan (${method}, Shafi'i)`;
       noteEl.hidden = false;
     } else {
       noteEl.textContent = "";
@@ -184,8 +184,8 @@ function updateDashboard() {
 
   document.getElementById("full_date_time").textContent =
     `${monthName} ${dayPadded}, ${now.getFullYear()}| ${hours}:${minsPadded}`;
-  document.getElementById("day_of_year").textContent = dayNum;
-  document.getElementById("week_number").textContent = weekNum;
+  document.getElementById("day_week_info").textContent =
+    `~ Day ${dayNum}, Week ${weekNum}`;
   document.getElementById("neko_status").textContent = nekoStatus;
   document.getElementById("wipey_status").textContent = wipeyStatus;
 }

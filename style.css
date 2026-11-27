@@ -12,12 +12,24 @@ body {
     margin: auto; 
 }
 
-.header h2 { 
-    font-size: 1.2rem;
-    word-wrap: break-word; 
+.header {
     margin-bottom: 20px;
     border-bottom: 2px solid #ddd;
     padding-bottom: 10px;
+}
+
+.header h2 { 
+    font-size: 1.2rem;
+    line-height: 1.25;
+    word-wrap: break-word; 
+    margin: 0;
+}
+
+.header-sub {
+    font-size: 0.95rem;
+    font-weight: normal;
+    line-height: 1.25;
+    margin: 6px 0 0 0;
 }
 
 .section { 
@@ -33,12 +45,6 @@ body {
     font-family: 'Courier New', monospace; 
     font-size: 1.1rem; 
     color: #2c3e50; 
-}
-
-.demphasized {
-    color: #23353B;  
-    font-size: 1rem; 
-    font-weight: normal; 
 }
 
 .status-val { 
@@ -177,8 +183,13 @@ img {
         font-size: 1rem;
     }
 
+    .header-sub {
+        font-size: 0.85rem;
+    }
+
     #updatelocation {
         font-size: 0.72rem;
         padding: 3px 7px;
     }
 }
+
